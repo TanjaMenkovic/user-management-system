@@ -7,7 +7,7 @@ It involves modules for user operations, utilities, and a main application scrip
 
 Task Description:
 
-* database.py: Simulates a simple in-memory database to store user information.
+* database.py: Simulates a simple SQLite database to store user information.
 * user.py: Contains the User class and its methods.
 * auth.py: Handles authentication tasks like login and registration.
 * password.py: Provides utility functions like hashing passwords.

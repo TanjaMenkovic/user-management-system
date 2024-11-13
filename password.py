@@ -1,22 +1,16 @@
-# utils.py
 import hashlib
 import os
+import re
 from typing import Dict
 
-# def hash_password(password: str) -> str:
-#     return hashlib.sha256(password.encode()).hexdigest()
-
-# def verify_password(password: str, hashed_password: str) -> bool:
-#     return hash_password(password) == hashed_password
-
 def hash_password_with_salt(password: str) -> Dict[str, str]:
-    salt = os.urandom(16)  # Generate a random 16-byte salt
-    hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)
+    salt: bytes = os.urandom(16)
+    hashed_password: bytes = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 100000)
     return {"salt": salt.hex(), "hash": hashed_password.hex()}
 
 def verify_password_with_salt(password: str, hashed_data: Dict[str, str]) -> bool:
-    salt = bytes.fromhex(hashed_data["salt"])
-    hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)
+    salt: bytes = bytes.fromhex(hashed_data["salt"])
+    hashed_password: bytes = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 100000)
     return hashed_password.hex() == hashed_data["hash"]
 
 def validate_password(password: str) -> bool:
@@ -28,12 +22,8 @@ def validate_password(password: str) -> bool:
     - Contains at least one special character (non-alphanumeric).
     Returns True if the password meets the criteria, False otherwise.
     """
-    if len(password) < 8:
+    if len(password) < 8 or not any(c.isdigit() for c in password):
         return False
-    if not any(char.isdigit() for char in password):
-        return False
-    if not any(char.isupper() for char in password):
-        return False
-    if not re.search(r"[^\w\s]", password):  # Match any non-alphanumeric character
+    if not any(c.isupper() for c in password) or not re.search(r"[^\w\s]", password):
         return False
     return True
